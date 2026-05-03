@@ -75,7 +75,6 @@
             position: absolute; top: 0; left: 0;
         }
 
-        #start-screen .media-layer video, 
         #start-screen .media-layer img {
             object-fit: fill;
         }
@@ -193,10 +192,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- 1. 시작 화면 -->
         <section id="start-screen" class="screen active-screen" onclick="startGame()">
             <div class="media-layer">
-                <video autoplay loop muted playsinline id="intro-video">
-                    <source src="0. OPENING.mp4" type="video/mp4">
-                </video>
-                <div class="media-placeholder pixel-font" id="intro-placeholder">
+                <img src="0. OPENING.gif" alt="Opening" id="intro-gif">
+                <div class="media-placeholder pixel-font" id="intro-placeholder" style="display:none;">
                     <div class="text-4xl mb-4">🇰🇷</div>
                     K-EARTH<br>SURVIVAL
                 </div>
@@ -212,7 +209,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="heart-bar" id="lives-display"></div>
             
             <div class="media-layer">
-                <video id="quiz-video" muted playsinline style="display:none;"></video>
+                <!-- 비디오 대신 이미지(GIF) 사용 -->
+                <img id="quiz-gif" src="" alt="Quiz Scene" style="display:none;">
                 <div id="quiz-placeholder" class="media-placeholder">
                     <div id="quiz-icon" class="text-6xl mb-4">📍</div>
                     <div class="pixel-font text-xs opacity-50">SCENE LOADING...</div>
@@ -341,7 +339,7 @@ function trackConversion(type) {
 }
         const quizData = [
             { 
-                icon: "✍️", video: "1. VIDEO_INK.mp4", 
+                icon: "✍️", gif: "1. VIDEO_INK.gif", 
                 introText: "I just checked into my hotel, and they handed me one of those multi-color pens to sign some papers. Now I’m wondering... which color should I even use?", 
                 a: "Use red ink.", b: "Use black ink.", 
                 imgA: "1. CHOICE1_INK.jpg", 
@@ -352,7 +350,7 @@ function trackConversion(type) {
                 feedback: "Never write names in red. It’s an ancient taboo linked to death. Use black or blue ink!" 
             },
             { 
-                icon: "🥢", video: "2. VIDEO_UTENSIL.mp4", 
+                icon: "🥢", gif: "2. VIDEO_UTENSIL.gif", 
                 introText: "I go to a restaurant for a meal. All the food has been served, but there are no utensils. How should I get them?", 
                 a: "Call the staff loudly and ask them to bring some.", b: "Open the drawer under the table and take them out.", 
                 imgA: "2. CHOICE1_UTENSIL.jpg", 
@@ -363,7 +361,7 @@ function trackConversion(type) {
                 feedback: "In Korea, it is almost an unspoken rule to set out the utensils and water as soon as everyone sits down. Be careful, or you might come across as clueless!" 
             },
             { 
-                icon: "🏃", video: "3. VIDEO_ESCALATOR.mp4", 
+                icon: "🏃", gif: "3. VIDEO_ESCALATOR.gif", 
                 introText: "Where should I stand when taking an escalator?", 
                 a: "Line up on the left.", b: "Line up on the right.", 
                 imgA: "3. CHOICE1_ESCALATOR.png", 
@@ -374,7 +372,7 @@ function trackConversion(type) {
                 feedback: "People stand on the right side to ride up slowly, keeping the left side clear for those who are in a hurry and want to walk up." 
             },
             { 
-                icon: "💸", video: "4. VIDEO_TIP.mp4", 
+                icon: "💸", gif: "4. VIDEO_TIP .gif", 
                 introText: "I enjoyed delicious food and friendly service at a restaurant. What should I do?", 
                 a: "Express my gratitude verbally.", b: "Leave a tip.", 
                 imgA: "4. CHOICE1_TIP.jpg", 
@@ -385,7 +383,7 @@ function trackConversion(type) {
                 feedback: "There is no tipping culture in Korea. Simply saying 'Thank you' is perfectly enough." 
             },
             { 
-                icon: "🙇", video: "5. VIDEO_BOW.mp4", 
+                icon: "🙇", gif: "5. VIDEO_BOW .gif", 
                 introText: "I walk into a local shop or a restaurant, and the owner welcomes me. How should I greet them in return?", 
                 a: "Wave my hand and say 'Hi!'.", b: "Give a bow with my head and upper body.", 
                 imgA: "5. CHOICE1_BOW.jpg", 
@@ -400,7 +398,7 @@ function trackConversion(type) {
         let currentIdx = 0, lives = 3, score = 0, finalRank = "K-Newbie";
         let isIntroState = false;
         
-        const qVideo = document.getElementById('quiz-video');
+        const qGif = document.getElementById('quiz-gif');
         const qPlaceholder = document.getElementById('quiz-placeholder');
         const qIcon = document.getElementById('quiz-icon');
         const dialogue = document.getElementById('dialogue-text');
@@ -426,17 +424,17 @@ function trackConversion(type) {
             feedbackPlaceholder.style.display = 'none';
             quizTapGuide.style.display = 'block';
             
-            if (data.video) {
-                qVideo.src = data.video;
-                qVideo.style.display = 'block';
-                qVideo.load();
-                qVideo.play().catch(e => {
-                    qVideo.style.display = 'none';
+            if (data.gif) {
+                qGif.src = data.gif;
+                qGif.style.display = 'block';
+                qPlaceholder.style.display = 'none';
+                qGif.onerror = () => {
+                    qGif.style.display = 'none';
                     qPlaceholder.style.display = 'flex';
                     qIcon.innerText = data.icon;
-                });
+                };
             } else {
-                qVideo.style.display = 'none';
+                qGif.style.display = 'none';
                 qPlaceholder.style.display = 'flex';
                 qIcon.innerText = data.icon;
             }
